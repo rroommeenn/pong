@@ -40,7 +40,10 @@ clock=time.Clock()
 player1=Player("bat.png",20,100,5,25,100)
 player2=Player("bat.png",650,100,5,25,100)
 ball=GameSprite("ball.png",310,210,5,40,40)
-while game:
+finish=False
+ball_speed_x=3
+ball_speed_y=3
+while game and not finish:
     for e in event.get():
         if e.type == QUIT:
             game = False
@@ -49,6 +52,13 @@ while game:
     player1.reset()
     player2.reset()
     ball.reset()
+    if not finish:
+        ball.rect.x+=ball_speed_x
+        ball.rect.y+=ball_speed_y
+    if ball.rect.y>=460 or ball.rect.y<=0:
+        ball_speed_y*=-1
+    if sprite.collide_rect(player1,ball) or sprite.collide_rect(player2,ball):
+        ball_speed_x*=-1
     player1.going_l()
     player2.going_r()
     display.update()
