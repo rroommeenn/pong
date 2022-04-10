@@ -20,18 +20,34 @@ class GameSprite(sprite.Sprite):
     def reset(self):
         win.blit(self.image,(self.rect.x,self.rect.y))
 class Player(GameSprite):
-    def going(self):
+    def going_r(self):
         keys_pressed=key.get_pressed()
         if keys_pressed[K_DOWN] and self.rect.y >=10:
-            self.rect.x-=self.speed
-        if keys_pressed[K_UP] and self.rect.x <=650:
-            self.rect.x+=self.speed
+            self.rect.y-=self.speed
+        if keys_pressed[K_UP] and self.rect.y <=490:
+            self.rect.y+=self.speed
+    def going_l(self):
+        keys_pressed=key.get_pressed()
+        if keys_pressed[K_s] and self.rect.y >=10:
+            self.rect.y-=self.speed
+        if keys_pressed[K_w] and self.rect.y <=490:
+            self.rect.y+=self.speed
 #создание переменных
 backcground=transform.scale(image.load('back.jpg'),(700,500))
 game=True
 FPS=60
 clock=time.Clock()
+player1=Player("bat.png",20,100,5,25,100)
+player2=Player("bat.png",650,100,5,25,100)
 while game:
+    for e in event.get():
+        if e.type == QUIT:
+            game = False
+
     win.blit(backcground,(0,0))
+    player1.reset()
+    player2.reset()
+    player1.going_l()
+    player2.going_r()
     display.update()
     clock.tick(FPS)
