@@ -22,15 +22,15 @@ class GameSprite(sprite.Sprite):
 class Player(GameSprite):
     def going_r(self):
         keys_pressed=key.get_pressed()
-        if keys_pressed[K_DOWN] and self.rect.y >=10:
+        if keys_pressed[K_UP] and self.rect.y >=10:
             self.rect.y-=self.speed
-        if keys_pressed[K_UP] and self.rect.y <=490:
+        if keys_pressed[K_DOWN] and self.rect.y <=400:
             self.rect.y+=self.speed
     def going_l(self):
         keys_pressed=key.get_pressed()
-        if keys_pressed[K_s] and self.rect.y >=10:
+        if keys_pressed[K_w] and self.rect.y >=10:
             self.rect.y-=self.speed
-        if keys_pressed[K_w] and self.rect.y <=490:
+        if keys_pressed[K_s] and self.rect.y <=400:
             self.rect.y+=self.speed
 #создание переменных
 backcground=transform.scale(image.load('back.jpg'),(700,500))
@@ -39,6 +39,7 @@ FPS=60
 clock=time.Clock()
 player1=Player("bat.png",20,100,5,25,100)
 player2=Player("bat.png",650,100,5,25,100)
+ball=GameSprite("ball.png",310,210,5,40,40)
 while game:
     for e in event.get():
         if e.type == QUIT:
@@ -47,6 +48,7 @@ while game:
     win.blit(backcground,(0,0))
     player1.reset()
     player2.reset()
+    ball.reset()
     player1.going_l()
     player2.going_r()
     display.update()
