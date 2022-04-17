@@ -1,10 +1,8 @@
 #подключение библиотек
 from pygame import *
-mixer.init()
 font.init()
-font=font.Font(None,35)
-from random import*
-from time import time as timer
+font=font.Font(None,70)
+mixer.init()
 #создание окна
 win=display.set_mode((700,500))
 display.set_caption('pong')
@@ -33,7 +31,7 @@ class Player(GameSprite):
         if keys_pressed[K_s] and self.rect.y <=400:
             self.rect.y+=self.speed
 #создание переменных
-backcground=transform.scale(image.load('back.jpg'),(700,500))
+background=transform.scale(image.load("back.jpg"),(700,500))
 game=True
 FPS=60
 clock=time.Clock()
@@ -43,23 +41,44 @@ ball=GameSprite("ball.png",310,210,5,40,40)
 finish=False
 ball_speed_x=3
 ball_speed_y=3
-while game and not finish:
+p1_win=font.render('player1 win',1,(0,255,255))
+p2_win=font.render('player2 win',1,(0,255,255))
+r1sound=mixer.Sound('rsound1.ogg')
+r2sound=mixer.Sound('rsound2.ogg')
+wlsound=mixer.Sound('wlsound.ogg')
+while game:
     for e in event.get():
         if e.type == QUIT:
             game = False
-
-    win.blit(backcground,(0,0))
-    player1.reset()
-    player2.reset()
-    ball.reset()
     if not finish:
-        ball.rect.x+=ball_speed_x
-        ball.rect.y+=ball_speed_y
-    if ball.rect.y>=460 or ball.rect.y<=0:
-        ball_speed_y*=-1
-    if sprite.collide_rect(player1,ball) or sprite.collide_rect(player2,ball):
-        ball_speed_x*=-1
-    player1.going_l()
-    player2.going_r()
-    display.update()
-    clock.tick(FPS)
+        win.blit(background,(0,0))
+        player1.reset()
+        player2.reset()
+        ball.reset()
+        if not finish:
+            ball.rect.x+=ball_speed_x
+            ball.rect.y+=ball_speed_y
+        if ball.rect.y>=460 or ball.rect.y<=0:
+            ball_speed_y*=-1
+            r1sound.play()
+        if sprite.collide_rect(player1,ball) or sprite.collide_rect(player2,ball):
+            ball_speed_x*=-1
+            r2sound.play()
+        if ball.rect.x<=0:
+            win.blit(p2_win,(350,250))
+            finish=True
+            wlsound.play()
+        if ball.rect.x>=700:
+            win.blit(p1_win,(50,250))
+            finish=True
+            wlsound.play()
+        player1.going_l()
+        player2.going_r()
+        display.update()
+        clock.tick(FPS)
+    else:
+        time.delay(5000)
+        player1=Player("bat.png",20,100,5,25,100)
+        player2=Player("bat.png",650,100,5,25,100)
+        ball=GameSprite("ball.png",310,210,5,40,40)
+        finish=False
